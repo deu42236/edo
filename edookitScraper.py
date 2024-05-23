@@ -10,14 +10,14 @@ import requests
 
 
 
-url = 'https://spseol.edookit.net/timetable/static/'
+url = 'https://spseol.edookit.net/timetable/?familyTimetable-value=7&do=familyTimetable-changeFilter'
 
 cookies = {
-    
+
 }
 
 headers = {
-
+    
 }
 
 
@@ -40,6 +40,7 @@ for j in range(5):
     currentLesson = []
     for i in multiLineLesson:
         i = i.replace(' ', '')
+        # i = i.replace('\u2006', ' ')
         if i != '': #remove empty elements
             currentLesson.append(i)
     finalList.append(currentLesson)
