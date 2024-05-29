@@ -4,7 +4,6 @@ import requests
 import keys
 from datetime import datetime
 
-
 url = 'https://spseol.edookit.net'
 cookies = keys.cookies
 headers = keys.headers
@@ -25,49 +24,38 @@ def format_converter(input_str, time_position):
     output_str = date_time_obj.strftime("%Y-%m-%dT%H:%M:%S")
     return output_str
 
-
-#start_time_output = format_converter(input_str, 0)
-#end_time_output = format_converter(input_str, 1)
-
-
-
-
-
-# lessonRaw = soup.find(attrs={'class':'lesson-info'})
-
-# print(lessons[0].text.splitlines())
-finalList = [] #matrix of all lessons
-for j in range(len(lessons)):
-    multiLineLesson = lessons[j].text.splitlines() #multiline string to list of strings
-    currentLesson = []
-    for i in multiLineLesson:
-        i = i.replace('            ', '')
-        i = i.replace('        ', '')
-        i = i.replace('    ', '',)
-        i = i.replace('\u2009', '')
-        i = i.replace('Informace o hodině', '')
-        if i != '':       #remove empty elements
-            currentLesson.append(i)
-
-    finalList.append(currentLesson)
+def all_lessons():
+    try:
+        finalList = [] #matrix of all lessons
+        for j in range(len(lessons)):
+            multiLineLesson = lessons[j].text.splitlines() #multiline string to list of strings
+            currentLesson = []
+            for i in multiLineLesson:
+                i = i.replace('            ', '')
+                i = i.replace('        ', '')
+                i = i.replace('    ', '',)
+                i = i.replace('\u2009', '')
+                i = i.replace('Informace o hodině', '')
+                if i != '':       #remove empty elements
+                    currentLesson.append(i)
+            finalList.append(currentLesson)
+        finalList[0].insert(0, format_converter(finalList[0][0], 0))
+        finalList[0].insert(1, format_converter(finalList[0][1], 1))
+        finalList[0].pop(2)
+        return(finalList)
+    except response.status_code == 200:
+        print('Error: ', response.status_code)
+        exit()
 
 
-# print(finalList[25]) #matrix of all lessons
-
-
-
-finalList[0].insert(0, format_converter(finalList[0][0], 0))
-finalList[0].insert(1, format_converter(finalList[0][1], 1))
-finalList[0].pop(2)
-print(finalList[0])
-finalList
 """
-[0] - začátek
-[1] - konec
-[2] - předmět
-[3] - Učitel
-[4] - Místnost
+                                    [0] - začátek
+                                    [1] - konec
+                                    [2] - předmět
+                                    [3] - Učitel
+                                    [4] - Místnost
 """ 
-if response.status_code != 200:
-    print('Error: ', response.status_code)
-    exit()
+
+
+print(len(lessons))
+print(len(all_lessons()))
