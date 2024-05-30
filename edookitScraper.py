@@ -39,23 +39,48 @@ def all_lessons():
                 if i != '':       #remove empty elements
                     currentLesson.append(i)
             finalList.append(currentLesson)
-        finalList[0].insert(0, format_converter(finalList[0][0], 0))
-        finalList[0].insert(1, format_converter(finalList[0][1], 1))
-        finalList[0].pop(2)
+        # finalList[0].insert(0, format_converter(finalList[0][0], 0))
+        # finalList[0].insert(1, format_converter(finalList[0][1], 1))
+        # finalList[0].pop(2)
+
+        # finalList[1].insert(0, format_converter(finalList[0][0], 0))
+        # finalList[1].insert(1, format_converter(finalList[0][1], 1))
+        # finalList[1].pop(2)
         return(finalList)
+    
+
+
     except response.status_code == 200:
         print('Error: ', response.status_code)
+        print('Check your internet connection or update keys.py file.')
         exit()
 
 
-"""
-                                    [0] - začátek
-                                    [1] - konec
-                                    [2] - předmět
-                                    [3] - Učitel
-                                    [4] - Místnost
-""" 
+
+# print(len(lessons))
+# print(len(all_lessons()))
+# print(all_lessons()[0])
+# print(type(all_lessons()[1]))
 
 
-print(len(lessons))
-print(len(all_lessons()))
+# print(format_converter(all_lessons()[0][0], 0))
+# print(format_converter(all_lessons()[1][0], 0))
+# print(format_converter(all_lessons()[3][0], 1))
+# print(format_converter(all_lessons()[4][0], 0))
+# print(format_converter(all_lessons()[5][0], 1))
+# print(format_converter(all_lessons()[6][0], 0))
+# print(format_converter(all_lessons()[7][0], 1))
+# print(format_converter(all_lessons()[8][0], 0))
+# print(format_converter(all_lessons()[9][0], 1))
+# print(format_converter(all_lessons()[10][0], 0))
+
+
+
+finalList = all_lessons()
+for i in range(3):
+    finalList[i].insert(0, format_converter(finalList[i][0], 0))
+    finalList[i].insert(1, format_converter(finalList[i][1], 1))
+    finalList[i].pop(2)
+
+    print(finalList[i])
+    print()
