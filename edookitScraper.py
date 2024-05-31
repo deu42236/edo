@@ -11,6 +11,8 @@ response = requests.get(url, cookies=cookies, headers=headers)
 soup = BeautifulSoup(response.content, 'html.parser')
 lessons = soup.findAll(attrs={'class':'lesson-info'})
 
+today = str(datetime.today())
+
 
 
 def format_converter(input_str, time_position):
@@ -36,6 +38,8 @@ def all_lessons():
                 i = i.replace('    ', '',)
                 i = i.replace('\u2009', '')
                 i = i.replace('Informace o hodině', '')
+                i = i.replace('Včera ', 'Po ')
+                i = i.replace('Dnes, ', 'Po ')
                 if i != '':       #remove empty elements
                     currentLesson.append(i)
             finalList.append(currentLesson)
@@ -82,5 +86,4 @@ for i in range(3):
     finalList[i].insert(1, format_converter(finalList[i][1], 1))
     finalList[i].pop(2)
 
-    print(finalList[i])
-    print()
+print(finalList)
