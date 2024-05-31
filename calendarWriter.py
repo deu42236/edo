@@ -6,15 +6,19 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-# from edookitScraper import *
-from edoWorking import *
+from edookitScraper import *
+# from edoWorking import *
+
+
+#you change it to your calendar ID
 calID = "f3a94d107e225350eb5cb8c8ff8d13f53066acdb96206823d492fddd73c163ff@group.calendar.google.com"
+
 
 lessons = (all_lessons())
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 def main():
-  #dont touch this part
+#dont touch this part
   creds = None
   if os.path.exists("token.js"):
     creds = Credentials.from_authorized_user_file("token.json")
@@ -28,17 +32,16 @@ def main():
       token.write(creds.to_json())
   try:
     service = build("calendar", "v3", credentials=creds)
-    #there you can
+#there you can
 
     for i in lessons:
-        if format_check(i[0]) and format_check(i[1]):
+        try:
           event = {
           "summary": i[3],
           "location": i[5],
           "description": i[4],
           "colorId": 6,
           "start": {
-              #year, month, day, hour, minute, second
               "dateTime": i[0],
               "timeZone": "Europe/Prague",
           },
@@ -47,9 +50,9 @@ def main():
               "timeZone": "Europe/Prague",
           },
           }
-          event = service.events().insert(calendarId=calID, body=event).execute()
+          event = service.events().insert(calendarId=calID, body=event).execute() #add event to calendar
           print("good")
-        else:
+        except:
           print("bad")
 
   except HttpError as error:

@@ -1,4 +1,3 @@
-#minor changes
 from bs4 import BeautifulSoup
 import requests
 import keys
@@ -11,14 +10,14 @@ response = requests.get(url, cookies=cookies, headers=headers)
 soup = BeautifulSoup(response.content, 'html.parser')
 lessons = soup.findAll(attrs={'class':'lesson-info'})
 
-today = str(date.today()) + "T"
-yesterday = str(date.today() - timedelta(days=1)) + "T"
-print(today)
+today = date.today()
+today = today.strftime('%d') + '.' + str(int(today.strftime('%m'))) + '.' + today.strftime('%Y') #today in edookit format
+yesterday = datetime.today() - timedelta(days=1)
+yesterday = yesterday.strftime('%d') + '.' + str(int(yesterday.strftime('%m'))) + '.' + yesterday.strftime('%Y') #yesterday in edookit format
 
 
-def format_converter(input_str, time_position):
+def format_converter(input_str, time_position): #edookit format -> google calendar format
     date_time_str = input_str[3:]
-    # Step 2: Split the date and time
     date_str, time_str = date_time_str.split(',')
     date_str = date_str.strip()
     time_str = time_str.split('–')[time_position].strip()
@@ -27,12 +26,12 @@ def format_converter(input_str, time_position):
     output_str = date_time_obj.strftime("%Y-%m-%dT%H:%M:%S")
     return output_str
 
-def format_check(date_str):
-    try:
-        datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
-        return True
-    except ValueError:
-        return False
+# def format_check(date_str):
+#     try:
+#         datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+#         return True
+#     except ValueError:
+#         return False
 
 
 def all_lessons():
@@ -47,36 +46,24 @@ def all_lessons():
             i = i.replace('    ', '',)
             i = i.replace('\u2009', '')
             i = i.replace('Informace o hodině', '')
-            i = i.replace('Včera ', f"{today}")
-            i = i.replace('Dnes, ', f"{yesterday}")
+            i = i.replace('Včera, ', f"Po {yesterday}, ")
+            i = i.replace('Dnes ', f"Po {today}, ")
             if i != '':       #remove empty elements
                 currentLesson.append(i)
-
-
-                
+            
         finalList.append(currentLesson)
     
-    
-
-
     finalfinalList = []
-    for i in range(len(lessons)): #13 nefunguje, nechapu proc
 
+
+    for i in range(len(lessons)):
         try:
             finalList[i].insert(0, format_converter(finalList[i][0], 0))
             finalList[i].insert(1, format_converter(finalList[i][1], 1))
             finalList[i].pop(2)
             finalfinalList.append(finalList[i])
-            # print(finalList[i])
         except:
-            # finalList.pop(i)
-            # print("no")
-            # print("2L" in str(finalList[i]))
-            # print(((finalList[i][0])))
             continue
 
-
     return(finalfinalList)
-
-
-# print(all_lessons())
+all_lessons()
