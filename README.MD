@@ -25,8 +25,10 @@ pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-
 ```
 
 - You can either use mine instance on Google Cloud. If you want to use mine, contact me on discord: ```danieldeut```
-- If you want to create your own, follow this tutorial ```https://youtu.be/B2E82UPUnOY?t=95``` and replace ```credentials.json```
-
+- If you want to create your own, follow tutorial (↓) and replace ```credentials.json```
+```
+https://youtu.be/B2E82UPUnOY?t=95
+```
 ### Run
 - Change ```calID``` to your own, if you want to use your accounts default calendar, set it to ```"primary"```
 - Follow instructions in ```keys.py```
