@@ -2,7 +2,7 @@
 from bs4 import BeautifulSoup
 import requests
 import keys
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
 url = 'https://spseol.edookit.net'
 cookies = keys.cookies
@@ -11,8 +11,9 @@ response = requests.get(url, cookies=cookies, headers=headers)
 soup = BeautifulSoup(response.content, 'html.parser')
 lessons = soup.findAll(attrs={'class':'lesson-info'})
 
-today = str(datetime.today())
-
+today = str(date.today()) + "T"
+yesterday = str(date.today() - timedelta(days=1)) + "T"
+print(today)
 
 
 def format_converter(input_str, time_position):
@@ -26,64 +27,56 @@ def format_converter(input_str, time_position):
     output_str = date_time_obj.strftime("%Y-%m-%dT%H:%M:%S")
     return output_str
 
-def all_lessons():
+def format_check(date_str):
     try:
-        finalList = [] #matrix of all lessons
-        for j in range(len(lessons)):
-            multiLineLesson = lessons[j].text.splitlines() #multiline string to list of strings
-            currentLesson = []
-            for i in multiLineLesson:
-                i = i.replace('            ', '')
-                i = i.replace('        ', '')
-                i = i.replace('    ', '',)
-                i = i.replace('\u2009', '')
-                i = i.replace('Informace o hodině', '')
-                i = i.replace('Včera ', 'Po ')
-                i = i.replace('Dnes, ', 'Po ')
-                if i != '':       #remove empty elements
-                    currentLesson.append(i)
-            finalList.append(currentLesson)
-        # finalList[0].insert(0, format_converter(finalList[0][0], 0))
-        # finalList[0].insert(1, format_converter(finalList[0][1], 1))
-        # finalList[0].pop(2)
+        datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+        return True
+    except ValueError:
+        return False
 
-        # finalList[1].insert(0, format_converter(finalList[0][0], 0))
-        # finalList[1].insert(1, format_converter(finalList[0][1], 1))
-        # finalList[1].pop(2)
-        return(finalList)
+
+def all_lessons():
+    finalList = [] #matrix of all lessons
+    for j in range(len(lessons)):
+    #for j in range(3):
+        multiLineLesson = lessons[j].text.splitlines() #multiline string to list of strings
+        currentLesson = []
+        for i in multiLineLesson:
+            i = i.replace('            ', '')
+            i = i.replace('        ', '')
+            i = i.replace('    ', '',)
+            i = i.replace('\u2009', '')
+            i = i.replace('Informace o hodině', '')
+            i = i.replace('Včera ', f"{today}")
+            i = i.replace('Dnes, ', f"{yesterday}")
+            if i != '':       #remove empty elements
+                currentLesson.append(i)
+
+
+                
+        finalList.append(currentLesson)
+    
     
 
 
-    except response.status_code == 200:
-        print('Error: ', response.status_code)
-        print('Check your internet connection or update keys.py file.')
-        exit()
+    finalfinalList = []
+    for i in range(len(lessons)): #13 nefunguje, nechapu proc
+
+        try:
+            finalList[i].insert(0, format_converter(finalList[i][0], 0))
+            finalList[i].insert(1, format_converter(finalList[i][1], 1))
+            finalList[i].pop(2)
+            finalfinalList.append(finalList[i])
+            # print(finalList[i])
+        except:
+            # finalList.pop(i)
+            # print("no")
+            # print("2L" in str(finalList[i]))
+            # print(((finalList[i][0])))
+            continue
 
 
-
-# print(len(lessons))
-# print(len(all_lessons()))
-# print(all_lessons()[0])
-# print(type(all_lessons()[1]))
+    return(finalfinalList)
 
 
-# print(format_converter(all_lessons()[0][0], 0))
-# print(format_converter(all_lessons()[1][0], 0))
-# print(format_converter(all_lessons()[3][0], 1))
-# print(format_converter(all_lessons()[4][0], 0))
-# print(format_converter(all_lessons()[5][0], 1))
-# print(format_converter(all_lessons()[6][0], 0))
-# print(format_converter(all_lessons()[7][0], 1))
-# print(format_converter(all_lessons()[8][0], 0))
-# print(format_converter(all_lessons()[9][0], 1))
-# print(format_converter(all_lessons()[10][0], 0))
-
-
-
-finalList = all_lessons()
-for i in range(3):
-    finalList[i].insert(0, format_converter(finalList[i][0], 0))
-    finalList[i].insert(1, format_converter(finalList[i][1], 1))
-    finalList[i].pop(2)
-
-print(finalList)
+# print(all_lessons())
