@@ -48,6 +48,8 @@ def all_lessons():
             i = i.replace('Informace o hodině', '')
             i = i.replace('Včera, ', f"Po {yesterday}, ")
             i = i.replace('Dnes ', f"Po {today}, ")
+            i = i.replace('Dnes, ', f"Po {today}, ")
+
             if i != '':       #remove empty elements
                 currentLesson.append(i)
             
